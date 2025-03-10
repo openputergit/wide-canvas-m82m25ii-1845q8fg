@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SEO Score Analyzer</title>
+    <script src="https://unpkg.com/react@17/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        .console-window {
+            font-family: 'Courier New', monospace;
+        }
+        .score-meter {
+            transition: width 0.5s ease-in-out;
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const App = () => {
+            const [url, setUrl] = React.useState('');
+            const [loading, setLoading] = React.useState(false);
+            const [score, setScore] = React.useState(null);
+            const [issues, setIssues] = React.useState([]);
+            const [fixes, setFixes] = React.useState([]);
+
+            const analyzeSEO = async () => {
+                if (!url) {
+                    alert('Please enter a valid URL');
+                    return;
+                }
+
+                setLoading(true);
+
+                // Simulated SEO analysis
+                setTimeout(() => {
+                    // Example algorithm to calculate SEO score
+                    const mockAnalysis = {
+                        score: Math.floor(Math.random() * 40) + 60,
+                        issues: [
+                            'Missing meta description',
+                            'Images lack alt text',
+                            'H1 tag not found',
+                            'Poor mobile responsiveness',
+                            'Slow loading time'
+                        ],
+                        fixes: [
+                            '<meta name="description" content="Your website description here">',
+                            '<img src="image.jpg" alt="Descriptive text">',
+                            '<h1>Main Page Heading</h1>',
+                            '@media (max-width: 768px) { /* Mobile responsive styles */ }',
+                            '<!-- Optimize images and enable caching -->'
+                        ]
+                    };
+
+                    setScore(mockAnalysis.score);
+                    setIssues(mockAnalysis.issues);
+                    setFixes(mockAnalysis.fixes);
+                    setLoading(false);
+                }, 2000);
+            };
+
+            return (
+                <div className="container mx-auto px-4 py-8">
+                    <h1 className="text-4xl font-bold text-center mb-8 text-gray-800">
+                        SEO Score Analyzer
+                    </h1>
+
+                    <div className="max-w-2xl mx-auto">
+                        <div className="flex gap-4 mb-8">
+                            <input 
+                                type="url" 
+                                value={url}
+                                onChange={(e) => setUrl(e.target.value)}
+                                placeholder="Enter website URL"
+                                className="flex-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            />
+                            <button 
+                                onClick={analyzeSEO}
+                                disabled={loading}
+                                className={`px-6 py-2 rounded-lg text-white font-semibold ${loading ? 'bg-gray-500' : 'bg-blue-600 hover:bg-blue-700'}`}
+                            >
+                                {loading ? 'Analyzing...' : 'Analyze SEO'}
+                            </button>
+                        </div>
+
+                        {score !== null && (
+                            <div className="mb-8">
+                                <div className="flex items-center gap-4 mb-2">
+                                    <span className="text-lg font-semibold">SEO Score:</span>
+                                    <span className="text-2xl font-bold">{score}%</span>
+                                </div>
+                                <div className="h-4 bg-gray-200 rounded-full">
+                                    <div 
+                                        className={`h-full rounded-full score-meter ${
+                                            score >= 80 ? 'bg-green-500' : 
+                                            score >= 60 ? 'bg-yellow-500' : 'bg-red-500'
+                                        }`}
+                                        style={{width: `${score}%`}}
+                                    ></div>
+                                </div>
+                            </div>
+                        )}
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div className="bg-white rounded-lg p-6 shadow-lg console-window">
+                                <h2 className="text-xl font-semibold mb-4 text-red-600">
+                                    <i className="bi bi-exclamation-triangle mr-2"></i>Issues Found
+                                </h2>
+                                <ul className="space-y-2 text-sm">
+                                    {issues.map((issue, index) => (
+                                        <li key={index} className="text-gray-700">
+                                            • {issue}
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
+
+                            <div className="bg-white rounded-lg p-6 shadow-lg console-window">
+                                <h2 className="text-xl font-semibold mb-4 text-green-600">
+                                    <i className="bi bi-check-circle mr-2"></i>Suggested Fixes
+                                </h2>
+                                <ul className="space-y-2 text-sm">
+                                    {fixes.map((fix, index) => (
+                                        <li key={index} className="text-gray-700 bg-gray-100 p-2 rounded">
+                                            <code>{fix}</code>
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        ReactDOM.render(<App />, document.getElementById('root'));
+    </script>
+<script>document.body.addEventListener('wheel', e => { if (!e.ctrlKey) return; e.preventDefault(); return }, { passive: false })</script>
+	</body>
+</html>
